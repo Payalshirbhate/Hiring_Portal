@@ -3,7 +3,7 @@ from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateAPIView
 )
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsHRUser, IsHRUserOrReadOnly
 
 from .models import Job
 from .serializers import JobSerializer
@@ -13,16 +13,16 @@ from .serializers import JobSerializer
 class JobListCreateView(ListCreateAPIView):
 
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsHRUserOrReadOnly]
 
     def get_queryset(self):
         # HR can see all jobs; public users see published jobs only
-        if self.request.user.is_authenticated:
+        if IsHRUser().has_permission(self.request, self):
             return Job.objects.all().order_by('-created_at')
 
         return Job.objects.filter(
-            status=Job.Status.PUBLISHED
-        ).order_by('-created_at')
+        status=Job.Status.PUBLISHED
+    ).order_by('-created_at')
 
     def perform_create(self, serializer):
         # Automatically save the logged-in HR user
@@ -33,10 +33,10 @@ class JobListCreateView(ListCreateAPIView):
 class JobDetailView(RetrieveUpdateAPIView):
 
     serializer_class = JobSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsHRUserOrReadOnly]
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
+        if IsHRUser().has_permission(self.request, self):
             return Job.objects.all()
 
         return Job.objects.filter(status=Job.Status.PUBLISHED)

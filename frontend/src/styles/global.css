@@ -1,0 +1,102 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* ==================================
+   HIRING PORTAL - GLOBAL THEME
+================================== */
+
+:root {
+  font-family: "Inter", sans-serif;
+
+  --color-primary: #FACC15;
+  --color-primary-hover: #EAB308;
+
+  --color-text: #171717;
+  --color-muted: #737373;
+
+  --color-background: #FFFFFF;
+  --color-surface: #FAFAFA;
+  --color-border: #E7E7E7;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==================================
+   GLOBAL RESET
+================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ==================================
+   TYPOGRAPHY
+================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  line-height: 1.3;
+}
+
+p {
+  line-height: 1.7;
+}
+
+/* ==================================
+   FORM ELEMENTS
+================================== */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+/* ==================================
+   ACCESSIBILITY
+================================== */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-hover);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

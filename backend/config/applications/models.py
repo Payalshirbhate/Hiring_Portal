@@ -23,7 +23,7 @@ class Application(models.Model):
     # Candidate information
     candidate_name = models.CharField(max_length=150)
     email = models.EmailField()
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=10)
 
     # Resume upload
     resume = models.FileField(upload_to='resumes/')
@@ -49,8 +49,8 @@ class Application(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['job', 'email'],
-                name='unique_email_per_job'
+                fields=["job", "email"],
+                name="unique_job_email"
             )
         ]
 
@@ -94,5 +94,5 @@ class StatusHistory(models.Model):
     # When this status was recorded
     changed_at = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.application.tracking_id} - {self.status}"    

@@ -23,6 +23,11 @@ build/
 # Django
 *.log
 db.sqlite3
+media/
+
+# React
+node_modules/
+dist/
 
 # IDE
 .vscode/
@@ -31,3 +36,18 @@ db.sqlite3
 # OS files
 .DS_Store
 Thumbs.db
+
+# Candidate uploaded resumes
+backend/config/resumes/
+backend/config/media/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python and React
+venv/
+.venv/
+node_modules/
+dist/
