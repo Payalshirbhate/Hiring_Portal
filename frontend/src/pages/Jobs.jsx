@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/client";
 import { Search, BriefcaseBusiness, MapPin, ArrowUpRight, SlidersHorizontal } from "lucide-react";
 import "../styles/Jobs.css";
-
-const API_URL = "http://127.0.0.1:8000/api/jobs/";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -14,7 +12,7 @@ export default function Jobs() {
 
   useEffect(() => {
     let active = true;
-    axios.get(API_URL)
+    api.get("/jobs/")
       .then(({ data }) => {
         if (active) setJobs(Array.isArray(data) ? data : data?.results || []);
       })

@@ -1,11 +1,10 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import {
   BriefcaseBusiness,
   Menu,
-  X,
-  ArrowUpRight
+  X
 } from "lucide-react";
 import "../../styles/Navbar.css";
 
@@ -18,6 +17,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="nav-container">
 
+        {/* BRAND */}
         <Link
           to="/"
           className="nav-brand"
@@ -30,6 +30,7 @@ function Navbar() {
           <span>Hiring Portal</span>
         </Link>
 
+        {/* MOBILE MENU BUTTON */}
         <button
           type="button"
           className="nav-menu-toggle"
@@ -40,9 +41,11 @@ function Navbar() {
           {menuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
 
+        {/* NAVIGATION MENU */}
         <div className={`nav-menu ${menuOpen ? "open" : ""}`}>
 
           <div className="nav-links">
+
             <NavLink
               to="/"
               end
@@ -73,16 +76,8 @@ function Navbar() {
             >
               Track Application
             </NavLink>
-          </div>
 
-          <Link
-            to="/hr/login"
-            className="hr-login-btn"
-            onClick={closeMenu}
-          >
-            HR Login
-            <ArrowUpRight size={15} />
-          </Link>
+          </div>
 
         </div>
       </div>

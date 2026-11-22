@@ -1,6 +1,7 @@
 from django.db import models
 from jobs.models import Job
 from django.conf import settings
+from .storage import private_storage
 
 class Application(models.Model):
 
@@ -23,10 +24,10 @@ class Application(models.Model):
     # Candidate information
     candidate_name = models.CharField(max_length=150)
     email = models.EmailField()
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=20)
 
-    # Resume upload
-    resume = models.FileField(upload_to='resumes/')
+    # Resume upload - stored in private storage (not accessible via public media URL)
+    resume = models.FileField(storage=private_storage, upload_to='resumes/')
 
     # Unique tracking ID (generated when applying)
     tracking_id = models.CharField(
@@ -53,8 +54,12 @@ class Application(models.Model):
                 name="unique_job_email"
             )
         ]
+        indexes = [
+            models.Index(fields=["status", "-created_at"]),
+            models.Index(fields=["email"]),
+        ]
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.candidate_name} - {self.job.title}"
 
 

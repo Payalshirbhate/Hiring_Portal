@@ -1,22 +1,20 @@
-
-/* =========================
-   HR MAIN LAYOUT
-========================= */
-
+/* HR layout */
 .hr-layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: 238px minmax(0, 1fr);
   min-height: 100vh;
   background: #f8f8f8;
-  font-family: "Inter", sans-serif;
+  font-family: Inter, sans-serif;
+  transition: grid-template-columns 950ms cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+.hr-layout:has(.hr-sidebar-collapsed) {
+  grid-template-columns: 72px minmax(0, 1fr);
+}
 
 .hr-sidebar {
-  width: 238px;
-  min-width: 238px;
+  width: 100%;
+  min-width: 0;
   height: 100vh;
   position: sticky;
   top: 0;
@@ -25,28 +23,21 @@
   flex-direction: column;
   background: #171717;
   color: #fff;
-  transition: width 0.25s ease, min-width 0.25s ease;
+  overflow: visible;
 }
 
-.hr-sidebar-collapsed {
-  width: 72px;
-  min-width: 72px;
-}
-
-/* =========================
-   BRAND
-========================= */
-
+/* Brand: heading beside logo, collapse button beneath logo */
 .hr-sidebar-brand {
-  height: 75px;
-  min-height: 75px;
+  height: 112px;
+  min-height: 112px;
   display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 0 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  align-items: flex-start;
+  gap: 9px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  position: relative;
+  white-space: nowrap;
 }
-
 .hr-brand-icon {
   width: 36px;
   height: 36px;
@@ -57,94 +48,53 @@
   background: #facc15;
   color: #171717;
   border-radius: 9px;
+  flex-shrink: 0;
 }
-
 .hr-brand-text {
   display: flex;
   flex-direction: column;
-  white-space: nowrap;
+  min-width: 0;
+  max-width: 145px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-width 950ms cubic-bezier(.45,0,.55,1), opacity 750ms ease-in-out;
 }
-
-.hr-brand-text strong {
-  font-size: 16px;
-  font-weight: 600;
+.hr-brand-text strong { font-size: 14px; font-weight: 600; }
+.hr-brand-text strong span { color: #facc15; }
+.hr-brand-text small { margin-top: 3px; font-size: 11px; color: #999; }
+.hr-sidebar-collapsed .hr-brand-text {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
 }
-
-.hr-brand-text strong span {
-  color: #facc15;
-}
-
-.hr-brand-text small {
-  margin-top: 3px;
-  font-size: 11px;
-  color: #999;
-}
-
-/* Collapsed brand */
-
-.hr-sidebar-collapsed .hr-sidebar-brand {
-  justify-content: center;
-  padding: 0;
-}
-
-/* =========================
-   COLLAPSE / EXPAND BUTTON
-========================= */
-
-.hr-menu-toggle-container {
-  padding: 12px 12px 0;
-}
-
-.hr-menu-toggle {
-  width: 100%;
-  height: 38px;
+.hr-sidebar-collapse {
+  position: absolute;
+  top: 69px;
+  left: 19px;
+  right: auto;
+  z-index: 10;
+  width: 34px;
+  height: 29px;
   display: flex;
   align-items: center;
-  gap: 13px;
-  padding: 0 14px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: #aaa;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.hr-menu-toggle svg {
-  flex-shrink: 0;
-}
-
-.hr-menu-toggle:hover {
-  background: rgba(255,255,255,0.08);
-  color: #facc15;
-}
-
-.hr-menu-toggle:focus-visible,
-.hr-nav-item:focus-visible,
-.hr-topbar-logout:focus-visible {
-  outline: 2px solid #facc15;
-  outline-offset: 2px;
-}
-
-/* Center menu icon when collapsed */
-
-.hr-sidebar-collapsed .hr-menu-toggle {
   justify-content: center;
   padding: 0;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 7px;
+  background: #252525;
+  color: #facc15;
+  cursor: pointer;
+  transition: background-color .2s, color .2s;
 }
+.hr-sidebar-collapse:hover { background: #facc15; color: #171717; }
+.hr-sidebar-collapsed .hr-sidebar-brand { padding-left: 18px; padding-right: 0; }
 
-/* =========================
-   NAVIGATION
-========================= */
-
+/* Navigation */
 .hr-sidebar-navigation {
-  padding: 17px 12px 24px;
   flex: 1;
   min-height: 0;
+  padding: 17px 12px 24px;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -154,26 +104,40 @@
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 1.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  max-height: 20px;
+  opacity: 1;
+  transition:
+    opacity 250ms ease,
+    max-height 450ms cubic-bezier(0.25, 1, 0.5, 1),
+    margin 450ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hr-sidebar-collapsed .hr-nav-label {
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
 }
 
 .hr-nav-item {
   width: 100%;
+  min-height: 44px;
   display: flex;
   align-items: center;
   gap: 13px;
   padding: 12px 14px;
   margin-bottom: 5px;
-  border: none;
+  border: 0;
   border-radius: 8px;
   background: transparent;
   color: #aaa;
   text-align: left;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
+  font: 500 13px Inter, sans-serif;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  overflow: hidden;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .hr-nav-item svg {
@@ -181,7 +145,7 @@
 }
 
 .hr-nav-item:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }
 
@@ -192,104 +156,148 @@
   font-weight: 600;
 }
 
-/* Collapsed navigation */
-
-
-/* =========================
-   SIDEBAR HEADER COLLAPSE
-========================= */
-
-.hr-sidebar-brand {
-  position: relative;
-  gap: 9px;
-  padding: 0 12px;
+.hr-nav-text {
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-width 950ms cubic-bezier(.45,0,.55,1), opacity 750ms ease-in-out;
 }
 
-.hr-brand-text {
+.hr-sidebar-collapsed .hr-nav-text {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hr-sidebar-bottom {
+  padding: 14px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: hidden;
+}
+
+.hr-logout-item {
+  margin-bottom: 0;
+}
+
+.hr-logout-item:hover {
+  color: #fff;
+}
+
+.hr-sidebar-collapse:focus-visible,
+.hr-nav-item:focus-visible,
+.hr-dashboard-back:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+/* Topbar and profile */
+.hr-main-area {
   flex: 1;
   min-width: 0;
 }
 
-.hr-brand-text strong {
-  font-size: 14px;
+.hr-topbar {
+  height: 75px;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #fff;
+  border-bottom: 1px solid #eaeaea;
 }
 
-.hr-sidebar-collapse {
-  width: 28px;
-  height: 28px;
+.hr-topbar-left,
+.hr-topbar-profile {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.hr-topbar-profile {
+  gap: 12px;
+}
+
+.hr-dashboard-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #52525b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.hr-dashboard-back:hover {
+  background: #fef9c3;
+  color: #171717;
+}
+
+.hr-topbar-heading h2 {
+  margin: 0;
+  color: #171717;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.hr-topbar-heading p {
+  margin: 4px 0 0;
+  color: #999;
+  font-size: 11px;
+}
+
+.hr-profile-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.hr-profile-info strong {
+  font-size: 12px;
+  color: #333;
+}
+
+.hr-profile-info span {
+  font-size: 11px;
+  color: #999;
+}
+
+.hr-profile-avatar {
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: #aaa;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.hr-sidebar-collapse:hover {
-  background: rgba(255,255,255,0.1);
-  color: #facc15;
-}
-
-/* Collapsed sidebar */
-
-.hr-sidebar-collapsed .hr-sidebar-brand {
-  height: 75px;
-  min-height: 75px;
-  padding: 0 8px;
-  justify-content: space-between;
-  gap: 2px;
-}
-
-.hr-sidebar-collapsed .hr-brand-icon {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-}
-
-.hr-sidebar-collapsed .hr-sidebar-collapse {
-  width: 24px;
-  height: 28px;
-}
-
-/* Hide any previous menu toggle row */
-
-.hr-menu-toggle-container {
-  display: none;
-}
-
-/* =========================
-   TOPBAR LOGOUT
-========================= */
-
-.hr-topbar-logout {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 14px;
-  border: none;
-  border-radius: 8px;
-  background: #171717;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.hr-topbar-logout:hover {
-  background: #facc15;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #fef3c7;
   color: #171717;
 }
 
-/* =========================
-   LOGOUT CONFIRMATION MODAL
-========================= */
+.hr-avatar-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
 
+.hr-page-content {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 12px 20px;
+}
+
+/* Logout confirmation */
 .hr-logout-overlay {
   position: fixed;
   inset: 0;
@@ -298,7 +306,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
 }
 
 .hr-logout-modal {
@@ -308,7 +316,7 @@
   border-radius: 14px;
   background: #fff;
   text-align: center;
-  box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
 }
 
 .hr-logout-modal-icon {
@@ -358,158 +366,83 @@
   color: #333;
 }
 
+.hr-logout-cancel:hover {
+  background: #f5f5f5;
+}
+
 .hr-logout-confirm {
   border: 1px solid #facc15;
   background: #facc15;
   color: #171717;
 }
 
-.hr-logout-cancel:hover {
-  background: #f5f5f5;
-}
-
 .hr-logout-confirm:hover {
   background: #eab308;
 }
 
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 768px) {
-  .hr-sidebar-collapse {
-    display: none;
-  }
-
-  .hr-sidebar-collapsed .hr-sidebar-brand {
-    padding: 0 20px;
-    gap: 11px;
-  }
-
-  .hr-topbar-logout {
-    padding: 9px;
-  }
-
-  .hr-topbar-logout span {
-    display: none;
-  }
+/* Dark mode */
+html.dark .hr-layout {
+  background: #111;
+  color: #f5f5f5;
 }
 
-/* =========================
-   SIDEBAR LOGOUT
-========================= */
-
-.hr-sidebar-bottom {
-  padding: 14px 12px;
-  border-top: 1px solid rgba(255,255,255,0.1);
+html.dark .hr-sidebar {
+  background: #0d0d0d;
+  border-right: 1px solid #292929;
 }
 
-.hr-logout-item {
-  margin-bottom: 0;
+html.dark .hr-sidebar-collapse {
+  border-color: #1c1c1c;
 }
 
-.hr-logout-item:hover {
-  color: #fff;
+html.dark .hr-topbar {
+  background: #1c1c1c;
+  border-bottom-color: #333;
 }
 
-/* =========================
-   MAIN AREA
-========================= */
-
-.hr-main-area {
-  flex: 1;
-  min-width: 0;
+html.dark .hr-topbar-heading h2,
+html.dark .hr-profile-info strong {
+  color: #f5f5f5;
 }
 
-/* =========================
-   TOPBAR
-========================= */
-
-.hr-topbar {
-  height: 75px;
-  padding: 0 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  background: #fff;
-  border-bottom: 1px solid #eaeaea;
+html.dark .hr-topbar-heading p,
+html.dark .hr-profile-info span {
+  color: #a3a3a3;
 }
 
-.hr-topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 17px;
+html.dark .hr-dashboard-back {
+  color: #d4d4d4;
 }
 
-.hr-topbar-heading h2 {
-  margin: 0;
-  color: #171717;
-  font-size: 16px;
-  font-weight: 600;
+html.dark .hr-dashboard-back:hover {
+  background: #383120;
+  color: #facc15;
 }
 
-.hr-topbar-heading p {
-  margin: 4px 0 0;
-  color: #999;
-  font-size: 11px;
+html.dark .hr-logout-modal {
+  background: #242424;
+  border: 1px solid #404040;
 }
 
-/* =========================
-   HR PROFILE
-========================= */
-
-.hr-topbar-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+html.dark .hr-logout-modal h3 {
+  color: #f5f5f5;
 }
 
-.hr-profile-info {
-  display: flex;
-  flex-direction: column;
-  text-align: right;
+html.dark .hr-logout-modal p {
+  color: #a3a3a3;
 }
 
-.hr-profile-info strong {
-  font-size: 12px;
-  color: #333;
+html.dark .hr-logout-cancel {
+  background: #333;
+  border-color: #555;
+  color: #f5f5f5;
 }
 
-.hr-profile-info span {
-  font-size: 11px;
-  color: #999;
+html.dark .hr-logout-cancel:hover {
+  background: #404040;
 }
 
-.hr-profile-avatar {
-  width: 37px;
-  height: 37px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fef3c7;
-  color: #171717;
-  border-radius: 50%;
-}
-
-
-
-/* =========================
-   PAGE CONTENT
-========================= */
-
-.hr-page-content {
-  width: 100%;
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 30px;
-}
-
-/* =========================
-   MOBILE CONTROLS
-========================= */
-
+/* Mobile navigation */
 .hr-mobile-menu-btn,
 .hr-mobile-close,
 .hr-mobile-overlay {
@@ -520,16 +453,16 @@
 .hr-mobile-close {
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 0;
   background: transparent;
   cursor: pointer;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
 @media (max-width: 768px) {
+  .hr-layout,
+  .hr-layout:has(.hr-sidebar-collapsed) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
   .hr-sidebar,
   .hr-sidebar-collapsed {
@@ -537,13 +470,35 @@
     left: -260px;
     top: 0;
     width: 238px;
-    min-width: 238px;
     height: 100vh;
-    transition: left 0.25s ease;
+    transition: left 250ms ease;
   }
 
   .hr-sidebar-mobile-open {
     left: 0;
+  }
+
+  .hr-sidebar-collapse {
+    display: none;
+  }
+  .hr-sidebar-brand, .hr-sidebar-collapsed .hr-sidebar-brand {
+    height: 75px; min-height: 75px; align-items: center; padding: 0 18px;
+  }
+
+  .hr-sidebar .hr-brand-text {
+    max-width: 145px;
+    opacity: 1;
+  }
+
+  .hr-sidebar .hr-nav-text {
+    max-width: 160px;
+    opacity: 1;
+  }
+
+  .hr-sidebar .hr-nav-label {
+    max-height: 20px;
+    opacity: 1;
+    margin-bottom: 15px;
   }
 
   .hr-mobile-overlay {
@@ -551,7 +506,7 @@
     position: fixed;
     inset: 0;
     z-index: 40;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
   }
 
   .hr-mobile-close {
@@ -565,26 +520,8 @@
     color: #333;
   }
 
-  /* Desktop collapse control hidden on mobile */
-
-  .hr-menu-toggle-container {
-    display: none;
-  }
-
-  /* Keep mobile sidebar expanded */
-
-  .hr-sidebar-collapsed .hr-sidebar-brand {
-    justify-content: flex-start;
-    padding: 0 20px;
-  }
-
-  .hr-sidebar-collapsed .hr-nav-item {
-    justify-content: flex-start;
-    padding: 12px 14px;
-  }
-
-  .hr-sidebar-collapsed .hr-brand-text {
-    display: flex;
+  html.dark .hr-mobile-menu-btn {
+    color: #f5f5f5;
   }
 
   .hr-topbar {
@@ -597,15 +534,6 @@
   }
 
   .hr-profile-info {
-    display: none;
-  }
-
-  .hr-topbar-logout {
-    padding: 9px;
-    margin-left: 4px;
-  }
-
-  .hr-topbar-logout span {
     display: none;
   }
 }
@@ -631,21 +559,36 @@
     font-size: 10px;
   }
 
+  .hr-dashboard-back {
+    padding: 8px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
   .hr-profile-avatar {
     width: 32px;
     height: 32px;
   }
 }
 
-/* =========================
-   ACCESSIBILITY
-========================= */
-
 @media (prefers-reduced-motion: reduce) {
-  .hr-sidebar,
-  .hr-nav-item,
-  .hr-menu-toggle,
-  .hr-topbar-logout {
-    transition: none;
-  }
+  .hr-layout, .hr-brand-text, .hr-nav-text, .hr-nav-label { transition: none; }
+}
+
+/* Final alignment and smooth collapsed state */
+.hr-sidebar-brand { box-sizing: border-box; }
+.hr-sidebar-collapsed .hr-sidebar-navigation,
+.hr-sidebar-collapsed .hr-sidebar-bottom { padding-left: 12px; padding-right: 12px; }
+.hr-sidebar-collapsed .hr-nav-item { gap: 0; padding-left: 14px; padding-right: 0; }
+.hr-sidebar-collapsed .hr-brand-text,
+.hr-sidebar-collapsed .hr-nav-text { visibility: hidden; transition: max-width 950ms cubic-bezier(.45,0,.55,1), opacity 750ms ease-in-out, visibility 0s linear 950ms; }
+.hr-brand-text, .hr-nav-text { visibility: visible; transition: max-width 950ms cubic-bezier(.45,0,.55,1), opacity 750ms ease-in-out, visibility 0s; }
+.hr-sidebar-collapse { flex-shrink: 0; }
+@media (max-width: 768px) {
+  .hr-sidebar-collapsed .hr-nav-item { gap: 13px; padding: 12px 14px; }
+  .hr-sidebar-collapsed .hr-brand-text,
+  .hr-sidebar-collapsed .hr-nav-text { visibility: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hr-brand-text, .hr-nav-text { transition: none; }
 }

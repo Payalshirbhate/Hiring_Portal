@@ -1,0 +1,5 @@
+/* Dashboard-specific light mode correction; dark mode remains controlled by Tailwind. */
+html:not(.dark) .hr-dashboard .hr-dashboard-record { background-color:#fff !important; border-color:#e5e7eb !important; color:#1f2937; }
+html:not(.dark) .hr-dashboard .hr-dashboard-record:hover { background-color:#fffbeb !important; border-color:#fcd34d !important; }
+html:not(.dark) .hr-dashboard .hr-dashboard-record p.font-semibold { color:#1f2937 !important; }
+html:not(.dark) .hr-dashboard .hr-dashboard-record .text-gray-500 { color:#6b7280 !important; }

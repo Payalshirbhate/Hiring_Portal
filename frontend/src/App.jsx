@@ -17,6 +17,7 @@ import HRJobs from "./pages/HRJobs";
 import HRApplicants from "./pages/HRApplicants";
 
 import ProtectedRoute from "./components/ProtecteRoute";
+import HRSettings from "./pages/HRSettings";
 
 function Home() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/hr/dashboard" element={<HRDashboard />} />
           <Route path="/hr/jobs" element={<HRJobs />} />
           <Route path="/hr/applicants" element={<HRApplicants />} />
+          <Route path="/hr/settings" element={<HRSettings />}/>
         </Route>
       </Routes>
 

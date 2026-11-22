@@ -2,16 +2,16 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import AnonRateThrottle
 from django.db import IntegrityError, transaction
 from django.utils import timezone
+import secrets
 
 from .models import Application, StatusHistory
 from .serializers import ApplicationSerializer
 
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
 
-from .models import Application
 from .serializers import ApplicationTrackingSerializer
 
 from rest_framework.generics import ListAPIView
@@ -24,11 +24,12 @@ from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import get_valid_filename
 import os
-
+from rest_framework.generics import DestroyAPIView
 
 class ApplicationTrackingView(APIView):
 
     permission_classes = [AllowAny]
+    throttle_classes = [AnonRateThrottle]
 
     def post(self, request):
 
@@ -42,7 +43,11 @@ class ApplicationTrackingView(APIView):
             )
 
         try:
-            application = Application.objects.get(
+            application = Application.objects.select_related(
+                'job'
+            ).prefetch_related(
+                'status_history'
+            ).get(
                 tracking_id=tracking_id,
                 email__iexact=email
             )
@@ -168,9 +173,10 @@ class ApplicationCreateView(CreateAPIView):
                 # Save candidate application
                 application = serializer.save()
 
-                # Generate unique tracking ID
+                # Generate unique tracking ID with random suffix to prevent enumeration
+                random_code = secrets.token_hex(2).upper()
                 application.tracking_id = (
-                    f"HIR-{timezone.now().year}-{application.id:05d}"
+                    f"HIR-{timezone.now().year}-{application.id:04d}-{random_code}"
                 )
 
                 application.save(
@@ -228,7 +234,18 @@ class HRResumeDownloadView(APIView):
         try:
             file = application.resume.open("rb")
         except (FileNotFoundError, OSError):
-            raise Http404("Resume file not found.")
+            # Fallback for legacy uploaded files before storage separation
+            from django.conf import settings
+            file = None
+            for base_folder in [getattr(settings, "MEDIA_ROOT", None), getattr(settings, "BASE_DIR", None)]:
+                if not base_folder:
+                    continue
+                legacy_file_path = os.path.join(str(base_folder), str(application.resume.name))
+                if os.path.exists(legacy_file_path):
+                    file = open(legacy_file_path, "rb")
+                    break
+            if not file:
+                raise Http404("Resume file not found.")
 
         filename = get_valid_filename(
             os.path.basename(application.resume.name)
@@ -239,3 +256,21 @@ class HRResumeDownloadView(APIView):
             as_attachment=True,
             filename=filename
         )
+class HRApplicationDeleteView(DestroyAPIView):
+    queryset = Application.objects.all()
+    permission_classes = [IsHRUser]
+
+    def perform_destroy(self, instance):
+        resume_name = instance.resume.name if instance.resume else None
+        resume_storage = instance.resume.storage if resume_name else None
+
+        print("Deleting candidate:", instance.id)
+        print("Resume path:", resume_name)
+
+        # Delete candidate from database
+        instance.delete()
+
+        # Delete actual PDF from configured storage
+        if resume_name:
+            resume_storage.delete(resume_name)
+            print("Resume deletion requested:", resume_name)

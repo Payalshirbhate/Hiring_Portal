@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import ApplicationCreateView,ApplicationTrackingView,HRApplicationListView, HRApplicationStatusUpdateView
 from .views import HRResumeDownloadView
+from .views import HRApplicationDeleteView
 
 urlpatterns = [
     path(
@@ -27,6 +28,11 @@ urlpatterns = [
     "hr/applications/<int:pk>/resume/",
     HRResumeDownloadView.as_view(),
     name="hr-resume-download"
-),
+    ),
+    path(
+        'hr/applications/<int:pk>/',
+        HRApplicationDeleteView.as_view(),
+        name='hr-application-delete'
+    ),
     
 ]

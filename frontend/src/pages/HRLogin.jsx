@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/client";
 
 import {
   Eye,
@@ -27,8 +27,8 @@ export default function HRLogin() {
     setError("");
 
     try {
-      const { data } = await axios.post(
-        "http://127.0.0.1:8000/api/hr/login/",
+      const { data } = await api.post(
+        "/hr/login/",
         {
           username: username.trim(),
           password

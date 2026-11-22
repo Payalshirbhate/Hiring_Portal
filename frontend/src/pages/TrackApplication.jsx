@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/client";
 
 import {
   Search,
@@ -33,8 +33,8 @@ function TrackApplication() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/track/",
+      const response = await api.post(
+        "/track/",
         {
           tracking_id: trackingId.trim(),
           email: email.trim()

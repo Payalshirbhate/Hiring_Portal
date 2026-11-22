@@ -9,8 +9,8 @@ class HRTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Validate username and password first
         data = super().validate(attrs)
 
-        # Check whether the user is HR
-        if not self.user.is_staff or self.user.is_superuser:
+        # Check whether the user is HR or Admin
+        if not (self.user.is_staff or self.user.is_superuser):
             raise serializers.ValidationError(
                 "Only HR users can log in."
             )

@@ -1,10 +1,8 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/client";
 import "../styles/ApplyForm.css";
-
-const API = "http://127.0.0.1:8000/api";
 
 function ApplyForm() {
   const { id } = useParams();
@@ -25,7 +23,7 @@ function ApplyForm() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const response = await axios.get(`${API}/jobs/${id}/`);
+        const response = await api.get(`/jobs/${id}/`);
         setJob(response.data);
       } catch {
         setError("Unable to load job details.");
@@ -46,25 +44,6 @@ function ApplyForm() {
     }));
 
     setError("");
-  };
-
-  const getErrorMessage = (data) => {
-    if (!data) return "Something went wrong. Please try again.";
-
-    if (typeof data === "string") return data;
-
-    if (data.error) return data.error;
-    if (data.detail) return data.detail;
-
-    if (data.non_field_errors) {
-      return "You have already applied for this job using this email.";
-    }
-
-    const firstError = Object.values(data).flat()[0];
-
-    return typeof firstError === "string"
-      ? firstError
-      : "Unable to submit application.";
   };
 
   const handleSubmit = async (e) => {
@@ -93,10 +72,7 @@ function ApplyForm() {
     data.append("resume", formData.resume);
 
     try {
-      const response = await axios.post(
-        `${API}/applications/`,
-        data
-      );
+      const response = await api.post("/applications/", data);
 
       console.log("Application response:", response.data);
 

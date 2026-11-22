@@ -40,6 +40,7 @@ Thumbs.db
 # Candidate uploaded resumes
 backend/config/resumes/
 backend/config/media/
+backend/config/private_media/
 
 # Environment files
 .env
@@ -51,3 +52,9 @@ venv/
 .venv/
 node_modules/
 dist/
+
+.env
+**/media/
+**/resumes/
+venv/
+__pycache__/

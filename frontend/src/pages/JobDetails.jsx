@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/client";
 import { ArrowLeft, ArrowRight, BriefcaseBusiness, MapPin, FileText, ClipboardList } from "lucide-react";
 import "../styles/JobDetails.css";
 
@@ -12,9 +12,7 @@ export default function JobDetails() {
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    setError("");
-    axios.get(`http://127.0.0.1:8000/api/jobs/${id}/`)
+    api.get(`/jobs/${id}/`)
       .then(({ data }) => { if (active) setJob(data); })
       .catch(() => { if (active) setError("This job could not be loaded."); })
       .finally(() => { if (active) setLoading(false); });

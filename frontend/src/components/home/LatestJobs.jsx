@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/client";
 import {
   BriefcaseBusiness,
   MapPin,
@@ -20,7 +20,7 @@ function LatestJobs() {
   useEffect(() => {
     let active = true;
 
-    axios.get("http://127.0.0.1:8000/api/jobs/")
+    api.get("/jobs/")
       .then((response) => {
         if (!active) return;
 

@@ -1,42 +1,43 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 
-/* ==================================
-   HIRING PORTAL - GLOBAL THEME
-================================== */
+/* Tailwind v4: dark utilities follow the toggle, not the OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   font-family: "Inter", sans-serif;
-
   --color-primary: #FACC15;
   --color-primary-hover: #EAB308;
-
   --color-text: #171717;
   --color-muted: #737373;
-
   --color-background: #FFFFFF;
   --color-surface: #FAFAFA;
   --color-border: #E7E7E7;
-
+  --color-card: #FFFFFF;
+  --color-card-hover: #FFFBEB;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ==================================
-   GLOBAL RESET
-================================== */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+html.dark {
+  color-scheme: dark;
+  --color-text: #F5F5F5;
+  --color-muted: #A3A3A3;
+  --color-background: #121212;
+  --color-surface: #1C1C1C;
+  --color-border: #363636;
+  --color-card: #222222;
+  --color-card-hover: #2B2B2B;
 }
-
+*, *::before, *::after { box-sizing: border-box; }
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  overscroll-behavior-y: none;
 }
 
+body {
+  overscroll-behavior-y: none;
+}
 body {
   margin: 0;
   min-width: 320px;
@@ -46,57 +47,78 @@ body {
   font-family: "Inter", sans-serif;
   font-size: 14px;
   line-height: 1.6;
+  transition: background-color .25s ease, color .25s ease;
 }
-
-/* ==================================
-   TYPOGRAPHY
-================================== */
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: inherit;
-  line-height: 1.3;
+h1,h2,h3,h4,h5,h6 { font-family: inherit; line-height: 1.3; }
+p { line-height: 1.7; }
+button,input,textarea,select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+input,textarea,select { max-width: 100%; }
+html.dark input, html.dark textarea, html.dark select { color-scheme: dark; }
+html.dark input::placeholder, html.dark textarea::placeholder { color: #A3A3A3; }
+:focus-visible { outline: 2px solid var(--color-primary-hover); outline-offset: 3px; }
+.hr-layout,.hr-topbar,.hr-sidebar,.hr-theme-toggle {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
 }
-
-p {
-  line-height: 1.7;
-}
-
-/* ==================================
-   FORM ELEMENTS
-================================== */
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-}
-
-input,
-textarea,
-select {
-  max-width: 100%;
-}
-
-/* ==================================
-   ACCESSIBILITY
-================================== */
-
-:focus-visible {
-  outline: 2px solid var(--color-primary-hover);
-  outline-offset: 3px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
+  body,.hr-layout,.hr-topbar,.hr-sidebar,.hr-theme-toggle { transition: none; }
 }
+
+
+/* =========================================================
+   LIGHT MODE RESTORATION — HR WORKSPACE ONLY
+   Scoped to light mode, so the dark theme stays unchanged.
+   These rules also protect the light UI if an older Tailwind
+   dark media query is still present in the compiled stylesheet.
+========================================================= */
+html:not(.dark) .hr-theme-page {
+  background-color: #f5f5f5 !important;
+  color: #171717;
+}
+
+/* Original light cards and form surfaces */
+html:not(.dark) .hr-page-content [class~="bg-white"] {
+  background-color: #ffffff !important;
+}
+html:not(.dark) .hr-page-content [class~="bg-gray-50"] {
+  background-color: #f9fafb !important;
+}
+html:not(.dark) .hr-page-content [class~="bg-gray-100"] {
+  background-color: #f3f4f6 !important;
+}
+
+/* Original light text hierarchy */
+html:not(.dark) .hr-page-content [class~="text-gray-900"] { color: #111827 !important; }
+html:not(.dark) .hr-page-content [class~="text-gray-800"] { color: #1f2937 !important; }
+html:not(.dark) .hr-page-content [class~="text-gray-700"] { color: #374151 !important; }
+html:not(.dark) .hr-page-content [class~="text-gray-600"] { color: #4b5563 !important; }
+html:not(.dark) .hr-page-content [class~="text-gray-500"] { color: #6b7280 !important; }
+html:not(.dark) .hr-page-content [class~="text-gray-400"] { color: #9ca3af !important; }
+html:not(.dark) .hr-page-content [class~="text-gray-300"] { color: #d1d5db !important; }
+
+/* Light borders */
+html:not(.dark) .hr-page-content [class~="border-gray-100"] { border-color: #f3f4f6 !important; }
+html:not(.dark) .hr-page-content [class~="border-gray-200"] { border-color: #e5e7eb !important; }
+html:not(.dark) .hr-page-content [class~="border-gray-300"] { border-color: #d1d5db !important; }
+
+/* Light-mode form fields with dark variants but no light bg utility */
+html:not(.dark) .hr-theme-page input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) .hr-theme-page textarea,
+html:not(.dark) .hr-theme-page select {
+  background-color: #ffffff !important;
+  color: #171717 !important;
+  color-scheme: light;
+}
+html:not(.dark) .hr-theme-page input::placeholder,
+html:not(.dark) .hr-theme-page textarea::placeholder { color: #9ca3af !important; }
+
+/* Ensure normal light mode remains visible on dashboard */
+html:not(.dark) .hr-page-content h1[class*="text-gray-900"] {
+  color: #111827 !important;
+}
+
+/* Do not override dark mode: every rule above requires html:not(.dark). */
+
+
